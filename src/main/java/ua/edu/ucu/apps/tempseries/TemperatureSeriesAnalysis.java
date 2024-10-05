@@ -128,10 +128,7 @@ public double[] sortTemps() {
     //// Try
     public int addTemps(double... temps) {
         int currentSize = temperatureSeries.length;
-//         if in the passed temperature series, there is at least one value less than -273°C, then all
-// values from this series should not be added to the main series and an
-// InputMismatchException should be thrown (throw new InputMismatchException())
-
+        
         for (double temp : temps) {
             if (temp <= -273) {
                 throw new InputMismatchException("Temperature cannot be less than -273°C");
@@ -203,5 +200,4 @@ public double[] sortTemps() {
     
         return result;
     }
-
 }
