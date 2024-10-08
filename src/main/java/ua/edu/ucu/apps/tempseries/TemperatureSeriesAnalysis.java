@@ -4,8 +4,8 @@ import java.util.InputMismatchException;
 import java.util.function.Predicate;
 
 public class TemperatureSeriesAnalysis {
-    private static final double ABSOLUTE_ZERO = -273.0; // Константа для абсолютного нуля
-    private static final double FLOAT_COMPARISON_THRESHOLD = 1e-9; // Константа для порівняння з плаваючою точкою
+    private static final double ABSOLUTE_ZERO = -273.0;
+    private static final double FLOAT_COMPARISON_THRESHOLD = 1e-9;
     private double[] temperatureSeries;
     private int seriesLength;
 
@@ -69,7 +69,7 @@ public class TemperatureSeriesAnalysis {
         double minDiv = Math.abs(tempValue - temperatureSeries[0]);
         double minDivTemp = temperatureSeries[0];
 
-        for (int i = 0; i < seriesLength; i++) { // виправлено умову циклу
+        for (int i = 0; i < seriesLength; i++) {
             double currentTemp = temperatureSeries[i];
             double div = Math.abs(tempValue - currentTemp);
 
@@ -126,7 +126,7 @@ public class TemperatureSeriesAnalysis {
         int currentSize = temperatureSeries.length;
 
         for (double temp : temps) {
-            if (temp <= ABSOLUTE_ZERO) { // Використовуємо константу
+            if (temp <= ABSOLUTE_ZERO) {
                 throw new InputMismatchException("Temperature cannot be less than " + ABSOLUTE_ZERO + "°C");
             }
         }
