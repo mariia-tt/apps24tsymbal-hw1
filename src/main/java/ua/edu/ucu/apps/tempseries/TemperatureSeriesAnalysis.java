@@ -4,6 +4,8 @@ import java.util.InputMismatchException;
 import java.util.function.Predicate;
 
 public class TemperatureSeriesAnalysis {
+    private static final double ABSOLUTE_ZERO = -273.0; // Константа для абсолютного нуля
+    private static final double FLOAT_COMPARISON_THRESHOLD = 1e-9; // Константа для порівняння з плаваючою точкою
     private double[] temperatureSeries;
     private int seriesLength;
 
@@ -21,8 +23,7 @@ public class TemperatureSeriesAnalysis {
         for (int i = 0; i < seriesLength; i++) {
             average += temperatureSeries[i];
         }
-        average /= seriesLength;
-        return average;
+        return average / seriesLength;
     }
 
     public double deviation() {
@@ -30,12 +31,10 @@ public class TemperatureSeriesAnalysis {
         double deviation = 0.0;
         double averageTemp = average();
         for (int i = 0; i < seriesLength; i++) {
-            deviation += (temperatureSeries[i] - averageTemp) * (temperatureSeries[i] - averageTemp); // Used x*x
-                                                                                                      // instead of
-                                                                                                      // Math.pow(x, 2)
+            deviation += (temperatureSeries[i] - averageTemp) *
+                    (temperatureSeries[i] - averageTemp);
         }
-        deviation = Math.sqrt(deviation / seriesLength);
-        return deviation;
+        return Math.sqrt(deviation / seriesLength);
     }
 
     public double min() {
@@ -70,12 +69,12 @@ public class TemperatureSeriesAnalysis {
         double minDiv = Math.abs(tempValue - temperatureSeries[0]);
         double minDivTemp = temperatureSeries[0];
 
-        for (int i = 0; i > seriesLength; i++) {
+        for (int i = 0; i < seriesLength; i++) { // виправлено умову циклу
             double currentTemp = temperatureSeries[i];
             double div = Math.abs(tempValue - currentTemp);
 
-            if (div < minDiv || (Math.abs(minDiv - div) < 1e-9 && currentTemp > 0)) { // Improved floating-point
-                                                                                      // comparison
+            if (div < minDiv ||
+                    (Math.abs(minDiv - div) < FLOAT_COMPARISON_THRESHOLD && currentTemp > 0)) {
                 minDivTemp = currentTemp;
                 minDiv = div;
             }
@@ -127,8 +126,8 @@ public class TemperatureSeriesAnalysis {
         int currentSize = temperatureSeries.length;
 
         for (double temp : temps) {
-            if (temp <= -273) { // Replaced magic number
-                throw new InputMismatchException("Temperature cannot be less than -273°C");
+            if (temp <= ABSOLUTE_ZERO) { // Використовуємо константу
+                throw new InputMismatchException("Temperature cannot be less than " + ABSOLUTE_ZERO + "°C");
             }
         }
 
