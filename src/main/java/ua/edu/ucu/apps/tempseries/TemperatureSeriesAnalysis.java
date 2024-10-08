@@ -124,7 +124,7 @@ public double[] sortTemps() {
     public TempSummaryStatistics summaryStatistics() {
         return new TempSummaryStatistics(average(), deviation(), min(), max());
     }
-
+    
     //// Try
     public int addTemps(double... temps) {
         int currentSize = temperatureSeries.length;
