@@ -31,8 +31,8 @@ public class TemperatureSeriesAnalysis {
         double deviation = 0.0;
         double averageTemp = average();
         for (int i = 0; i < seriesLength; i++) {
-            deviation += (temperatureSeries[i] - averageTemp) *
-                    (temperatureSeries[i] - averageTemp);
+            deviation += (temperatureSeries[i] - averageTemp)
+                    * (temperatureSeries[i] - averageTemp);
         }
         return Math.sqrt(deviation / seriesLength);
     }
@@ -73,8 +73,9 @@ public class TemperatureSeriesAnalysis {
             double currentTemp = temperatureSeries[i];
             double div = Math.abs(tempValue - currentTemp);
 
-            if (div < minDiv ||
-                    (Math.abs(minDiv - div) < FLOAT_COMPARISON_THRESHOLD && currentTemp > 0)) {
+            if (div < minDiv
+                    || (Math.abs(minDiv - div) < FLOAT_COMPARISON_THRESHOLD
+                            && currentTemp > 0)) {
                 minDivTemp = currentTemp;
                 minDiv = div;
             }
@@ -91,7 +92,8 @@ public class TemperatureSeriesAnalysis {
     }
 
     public double[] findTempsInRange(double lowerBound, double upperBound) {
-        return createArrayByCondition(temp -> temp >= lowerBound && temp <= upperBound);
+        return createArrayByCondition(temp -> temp >= lowerBound
+                && temp <= upperBound);
     }
 
     public void reset() {
@@ -101,7 +103,8 @@ public class TemperatureSeriesAnalysis {
 
     public double[] sortTemps() {
         double[] temp = new double[temperatureSeries.length];
-        System.arraycopy(temperatureSeries, 0, temp, 0, temperatureSeries.length);
+        System.arraycopy(temperatureSeries, 0,
+                temp, 0, temperatureSeries.length);
 
         for (int i = 0; i < temp.length - 1; i++) {
             int minIndex = i;
@@ -127,12 +130,14 @@ public class TemperatureSeriesAnalysis {
 
         for (double temp : temps) {
             if (temp <= ABSOLUTE_ZERO) {
-                throw new InputMismatchException("Temperature cannot be less than " + ABSOLUTE_ZERO + "°C");
+                throw new InputMismatchException("Temperature cannot be less than "
+                        + ABSOLUTE_ZERO + "°C");
             }
         }
 
         if (seriesLength < currentSize + temps.length) {
-            double[] tempArray = new double[Math.max(seriesLength * 2, currentSize + temps.length)];
+            double[] tempArray = new double[Math.max(seriesLength * 2,
+                    currentSize + temps.length)];
             System.arraycopy(temperatureSeries, 0, tempArray, 0, currentSize);
 
             for (int i = 0; i < temps.length; i++) {
