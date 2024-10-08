@@ -17,7 +17,8 @@ public class TemperatureSeriesAnalysis {
     public TemperatureSeriesAnalysis(double[] temperatureSeries) {
         if (temperatureSeries != null) {
             this.temperatureSeries = new double[temperatureSeries.length];
-            System.arraycopy(temperatureSeries, 0, this.temperatureSeries, 0, temperatureSeries.length);
+            System.arraycopy(temperatureSeries, 0,
+                    this.temperatureSeries, 0, temperatureSeries.length);
             this.seriesLength = temperatureSeries.length;
         } else {
             this.temperatureSeries = new double[0];
