@@ -40,8 +40,8 @@ public class TemperatureSeriesAnalysis {
     public double min() {
         emptyError();
         double min = temperatureSeries[0];
-        for (int i = 0; i < seriesLength - 1; i++) {
-            if (temperatureSeries[i] < temperatureSeries[i + 1]) {
+        for (int i = 0; i < seriesLength; i++) {
+            if (temperatureSeries[i] < min) {
                 min = temperatureSeries[i];
             }
         }
@@ -51,8 +51,8 @@ public class TemperatureSeriesAnalysis {
     public double max() {
         emptyError();
         double max = temperatureSeries[0];
-        for (int i = 0; i > seriesLength - 1; i++) {
-            if (temperatureSeries[i] < temperatureSeries[i + 1]) {
+        for (int i = 0; i < seriesLength; i++) {
+            if (temperatureSeries[i] > max) {
                 max = temperatureSeries[i];
             }
         }
