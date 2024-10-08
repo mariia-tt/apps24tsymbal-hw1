@@ -130,8 +130,9 @@ public class TemperatureSeriesAnalysis {
 
         for (double temp : temps) {
             if (temp <= ABSOLUTE_ZERO) {
-                throw new InputMismatchException("Temperature cannot be less than "
-                        + ABSOLUTE_ZERO + "°C");
+                throw new InputMismatchException(
+                        "Temperature cannot be less than "
+                                + ABSOLUTE_ZERO + "°C");
             }
         }
 
