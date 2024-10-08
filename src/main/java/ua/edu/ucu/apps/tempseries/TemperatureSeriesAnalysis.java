@@ -1,19 +1,15 @@
 package ua.edu.ucu.apps.tempseries;
 
-import java.lang.Math;
-//import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.function.Predicate;
 
 public class TemperatureSeriesAnalysis {
-    double[] temperatureSeries;
-    int seriesLength;
-    //default constructor
-    public TemperatureSeriesAnalysis() {
+    private double[] temperatureSeries;
+    private int seriesLength;
 
+    public TemperatureSeriesAnalysis() {
     }
 
-    //a constructor with a parameter that accepts the initial temperature series
     public TemperatureSeriesAnalysis(double[] temperatureSeries) {
         this.temperatureSeries = temperatureSeries;
         this.seriesLength = temperatureSeries.length;
@@ -34,7 +30,9 @@ public class TemperatureSeriesAnalysis {
         double deviation = 0.0;
         double averageTemp = average();
         for (int i = 0; i < seriesLength; i++) {
-            deviation = Math.pow(temperatureSeries[i] - averageTemp, 2);
+            deviation += (temperatureSeries[i] - averageTemp) * (temperatureSeries[i] - averageTemp); // Used x*x
+                                                                                                      // instead of
+                                                                                                      // Math.pow(x, 2)
         }
         deviation = Math.sqrt(deviation / seriesLength);
         return deviation;
@@ -76,7 +74,8 @@ public class TemperatureSeriesAnalysis {
             double currentTemp = temperatureSeries[i];
             double div = Math.abs(tempValue - currentTemp);
 
-            if (div < minDiv || (minDiv - div == 0 && currentTemp > 0)) {
+            if (div < minDiv || (Math.abs(minDiv - div) < 1e-9 && currentTemp > 0)) { // Improved floating-point
+                                                                                      // comparison
                 minDivTemp = currentTemp;
                 minDiv = div;
             }
@@ -98,63 +97,57 @@ public class TemperatureSeriesAnalysis {
 
     public void reset() {
         this.temperatureSeries = new double[0];
+        this.seriesLength = 0;
     }
 
-public double[] sortTemps() {
-    double[] temp = new double[temperatureSeries.length];
-    for (int i = 0; i < temperatureSeries.length; i++) {
-        temp[i] = temperatureSeries[i];
-    }
+    public double[] sortTemps() {
+        double[] temp = new double[temperatureSeries.length];
+        System.arraycopy(temperatureSeries, 0, temp, 0, temperatureSeries.length);
 
-    for (int i = 0; i < temp.length - 1; i++) {
-        int minIndex = i;
-        for (int j = i + 1; j < temp.length; j++) {
-            if (temp[j] < temp[minIndex]) {
-                minIndex = j;
+        for (int i = 0; i < temp.length - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < temp.length; j++) {
+                if (temp[j] < temp[minIndex]) {
+                    minIndex = j;
+                }
             }
+            double variant = temp[minIndex];
+            temp[minIndex] = temp[i];
+            temp[i] = variant;
         }
-        double variant = temp[minIndex];
-        temp[minIndex] = temp[i];
-        temp[i] = variant;
-    }
 
-    return temp;
-}
+        return temp;
+    }
 
     public TempSummaryStatistics summaryStatistics() {
         return new TempSummaryStatistics(average(), deviation(), min(), max());
     }
-    
-    //// Try
+
     public int addTemps(double... temps) {
         int currentSize = temperatureSeries.length;
-        
+
         for (double temp : temps) {
-            if (temp <= -273) {
+            if (temp <= -273) { // Replaced magic number
                 throw new InputMismatchException("Temperature cannot be less than -273°C");
             }
         }
 
         if (seriesLength < currentSize + temps.length) {
-            double[] temp = new double[Math.max(seriesLength * 2, currentSize + temps.length)];
-
-            for (int i = 0; i < currentSize; i++) {
-                temp[i] = temperatureSeries[i];
-            }
+            double[] tempArray = new double[Math.max(seriesLength * 2, currentSize + temps.length)];
+            System.arraycopy(temperatureSeries, 0, tempArray, 0, currentSize);
 
             for (int i = 0; i < temps.length; i++) {
-                temp[currentSize + i] = temps[i];
+                tempArray[currentSize + i] = temps[i];
             }
 
-            temperatureSeries = temp;
+            temperatureSeries = tempArray;
             seriesLength = temperatureSeries.length;
         } else {
             for (int i = 0; i < temps.length; i++) {
                 temperatureSeries[currentSize + i] = temps[i];
             }
-        }        
+        }
         return currentSize + temps.length;
-
     }
 
     public void emptyError() {
@@ -162,23 +155,6 @@ public double[] sortTemps() {
             throw new IllegalArgumentException();
         }
     }
-
-    // public double[] createArrayByCondition(Predicate<Double> condition) {
-    //     ArrayList<Double> TempsGreaterThen = new ArrayList<Double>();
-
-    //     for (int i = 0; i < seriesLength; i++) {
-    //         if (condition.test(temperatureSeries[i])) {
-    //             TempsGreaterThen.add(temperatureSeries[i]);
-    //         }
-    //     }
-
-    //     double[] result = new double[TempsGreaterThen.size()];
-    //     for (int i = 0; i < TempsGreaterThen.size(); i++) {
-    //         result[i] = TempsGreaterThen.get(i);
-    //     }
-
-    //     return result;
-    // }
 
     public double[] createArrayByCondition(Predicate<Double> condition) {
         int count = 0;
@@ -188,7 +164,6 @@ public double[] sortTemps() {
             }
         }
 
-        // Створюємо масив для елементів, які задовольняють умову
         double[] result = new double[count];
         int index = 0;
         for (int i = 0; i < seriesLength; i++) {
@@ -197,7 +172,7 @@ public double[] sortTemps() {
                 index++;
             }
         }
-    
+
         return result;
     }
 }
